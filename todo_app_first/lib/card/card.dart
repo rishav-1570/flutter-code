@@ -2,17 +2,17 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
 import 'package:todo_app_first/add/addTask.dart';
-import 'package:todo_app_first/myCheckbox/MyCheckbox.dart';
+import 'package:todo_app_first/controller/Controller.dart';
 import 'package:todo_app_first/type/type_card.dart';
 
 class card extends StatelessWidget {
   TypeCard cardData ;
-  Function deleteTask ;
-  Function taskCheckFun ;
-  Function editTask ;
 
-  card(this.cardData,this.deleteTask,this.taskCheckFun,this.editTask);
+  final Controller c = Get.find<Controller>();
+
+  card({required this.cardData});
 
   @override
   Widget build(BuildContext context) {
@@ -24,10 +24,13 @@ class card extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          MyCheckbox(
-            ischecked: cardData.isCompleted,
-            taskCheckFun: taskCheckFun,
-            id: cardData.id
+          Checkbox(
+            value: cardData.isCompleted, 
+            onChanged: (bool? curr){
+              if(curr!=null){
+                c.taskChecked(cardData.id,curr);
+              }
+            }
           ),
           Expanded(
             child: Text(
@@ -53,7 +56,7 @@ class card extends StatelessWidget {
           SizedBox(width: 14.0,),
           IconButton(
             tooltip: "Delete Task",
-            onPressed: (){deleteTask(cardData.id);},
+            onPressed: (){c.deleteTask(cardData.id);},
             icon: Icon(
               Icons.delete,
               color: Colors.red,
@@ -87,16 +90,23 @@ class card extends StatelessWidget {
                 );
                 return ;
               };
-              dynamic task = await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context)=> AddTask.withTask(TextEditingController(text: cardData.task),{
-                    "title":"Edit Task",
-                    "button":"Save"
-                  })
-                )
-              );
-               if (task is String) editTask(cardData.id,task);
+              // dynamic task = await Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context)=> AddTask.withTask(TextEditingController(text: cardData.task),{
+              //       "title":"Edit Task",
+              //       "button":"Save"
+              //     })
+              //   )
+              // );
+              dynamic task = await Get.to(AddTask.withTask(
+                TextEditingController(text: cardData.task),
+                {
+                  "title":"Edit Task",
+                  "button":"Save"
+                }
+                ));
+               if (task is String) c.editTask(cardData.id,task);
             },
             icon: Icon(
               Icons.edit,

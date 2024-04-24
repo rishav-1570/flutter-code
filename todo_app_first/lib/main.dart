@@ -6,12 +6,7 @@ import 'Home.dart';
 void main() {
   runApp(GetMaterialApp(
     title: 'To-Do App',
-    initialRoute: '/',
-    routes: {
-      '/': (context) => Home(),
-      '/Add':(context) => AddTask(),
-    },
-    // home: Home(),
+     home: Home(),
   ));
 }
 

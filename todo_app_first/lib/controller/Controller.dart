@@ -12,20 +12,14 @@ class Controller extends GetxController{
     TypeCard(id: Controller.counter++ ,task: "Order neccessary grocery online ."),
     TypeCard(id: Controller.counter++ ,task: "Complete 2 incidents today."),
     TypeCard(id: Controller.counter++ ,task: "Play Badminton in the evening."),
-    
-  ];
+  ].obs;
 
   void addTask(String task){
-    
-      localStore.add(TypeCard(id: Controller.counter++, task: task));
-    // for(var e in localStore) print(e.task);
+    localStore.add(TypeCard(id: Controller.counter++, task: task));
   }
 
   void deleteTask(int id){
-    
-       localStore.removeWhere((element) => element.id == id);
-   
-    // for(var e in localStore) print(e.task);
+    localStore.removeWhere((element) => element.id == id);
   }
 
   void editTask(int id,String task){
@@ -36,17 +30,13 @@ class Controller extends GetxController{
       }
     }
 
-    if(!task.isEmpty){
-      
-        localStore.add(t.copyWith(task: task,isEdited: true));
-        localStore.remove(t);
-      
+    if(task.isNotEmpty){
+      localStore.add(t.copyWith(task: task,isEdited: true));
+      localStore.remove(t);
     }
-
   }
 
   void taskChecked(int id, bool curr){
-    // print("curr-> $curr and id-> $id");
     TypeCard t=localStore[0];
     for(TypeCard e in localStore){
       if(e.id == id){
@@ -55,17 +45,11 @@ class Controller extends GetxController{
     }
     
     if(curr){
-      
         localStore.add(t.copyWith(isCompleted: true));
         localStore.remove(t);
-    
-      // print("inside if : curr-> $curr and id-> $id");
     }else{
-      
         localStore.add(t.copyWith(isCompleted: false));
         localStore.remove(t);
-    
-      // print("inside else : curr-> $curr and id-> $id");
     }
   }
 
